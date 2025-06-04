@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pi Network Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .quiz-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #4a148c; /* Dark Pi purple */
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .options-container button {
+            display: block;
+            width: calc(100% - 20px); /* Adjust for padding/margin */
+            padding: 15px;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            color: #555;
+            text-align: left;
+        }
+        .options-container button:hover {
+            background-color: #e8eaf6; /* Light purple hover */
+            border-color: #7e57c2; /* Medium Pi purple */
+        }
+        .options-container button.correct {
+            background-color: #e0f2f1; /* Light green */
+            border-color: #26a69a; /* Green */
+            color: #1a535c;
+        }
+        .options-container button.incorrect {
+            background-color: #ffebee; /* Light red */
+            border-color: #ef5350; /* Red */
+            color: #b71c1c;
+        }
+        .options-container button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .next-btn {
+            background-color: #7e57c2; /* Medium Pi purple */
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background-color 0.3s ease;
+        }
+        .next-btn:hover {
+            background-color: #673ab7; /* Slightly darker Pi purple */
+        }
+        .score-section {
+            margin-top: 20px;
+            font-size: 1.4em;
+            color: #4a148c;
+            font-weight: bold;
+        }
+        .restart-btn {
+            background-color: #ffa726; /* Orange */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .restart-btn:hover {
+            background-color: #fb8c00; /* Darker orange */
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Pi Network Knowledge Quiz</h1>
+        <div class="question" id="question-text"></div>
+        <div class="options-container" id="options-buttons">
+            </div>
+        <button class="next-btn" id="next-button" style="display:none;">Next Question</button>
+        <div class="score-section" id="score-display" style="display:none;"></div>
+        <button class="restart-btn" id="restart-button" style="display:none;">Restart Quiz</button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the primary method of earning Pi cryptocurrency?",
+                options: ["Mining with powerful computers", "Daily engagement on a mobile app", "Trading on cryptocurrency exchanges", "Buying it directly from the Pi Core Team"],
+                correct: "Daily engagement on a mobile app"
+            },
+            {
+                question: "What is 'KYC' in the context of the Pi Network?",
+                options: ["Keep Your Coins", "Know Your Customer", "Key Yield Calculation", "Kilo-Yield Conversion"],
+                correct: "Know Your Customer"
+            },
+            {
+                question: "Which browser is specifically designed to interact with the Pi ecosystem?",
+                options: ["Google Chrome", "Mozilla Firefox", "Pi Browser", "Safari"],
+                correct: "Pi Browser"
+            },
+            {
+                question: "What is the term for a user who actively mines Pi daily?",
+                options: ["Developer", "Validator", "Pioneer", "Node"],
+                correct: "Pioneer"
+            },
+            {
+                question: "What phase is the Pi Network currently in (as of recent general knowledge)?",
+                options: ["Open Mainnet", "Testnet", "Enclosed Mainnet", "Alpha Testing"],
+                correct: "Enclosed Mainnet"
+            },
+            {
+                question: "What is the purpose of a 'Security Circle' in Pi Network?",
+                options: ["To protect your phone from viruses", "To verify transactions on the blockchain", "To enhance your mining rate and secure the network", "To join private chat groups"],
+                correct: "To enhance your mining rate and secure the network"
+            },
+            {
+                question: "Who founded the Pi Network?",
+                options: ["Satoshi Nakamoto", "Vitalik Buterin", "Dr. Nicolas Kokkalis & Dr. Chengdiao Fan", "Elon Musk"],
+                correct: "Dr. Nicolas Kokkalis & Dr. Chengdiao Fan"
+            },
+            {
+                question: "What is the maximum supply of Pi coins?",
+                options: ["Unlimited", "A fixed cap like Bitcoin", "It's dynamic, decreasing as more users join", "It's dynamic, increasing as more users join"],
+                correct: "It's dynamic, increasing as more users join"
+            },
+            {
+                question: "What is a 'Node' in the Pi Network?",
+                options: ["A physical device used for mining", "A computer program that supports the blockchain's security and validation", "A social gathering for Pioneers", "A type of in-app advertisement"],
+                correct: "A computer program that supports the blockchain's security and validation"
+            },
+            {
+                question: "What is the primary goal of the Pi Network?",
+                options: ["To become the most expensive cryptocurrency", "To create a widely distributed and accessible cryptocurrency for everyday people", "To replace traditional banking systems", "To build the largest social media platform"],
+                correct: "To create a widely distributed and accessible cryptocurrency for everyday people"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answeredCurrentQuestion = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsButtons = document.getElementById('options-buttons');
+        const nextButton = document.getElementById('next-button');
+        const scoreDisplay = document.getElementById('score-display');
+        const restartButton = document.getElementById('restart-button');
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            answeredCurrentQuestion = false;
+            nextButton.style.display = 'none';
+            scoreDisplay.style.display = 'none';
+            restartButton.style.display = 'none';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            answeredCurrentQuestion = false;
+            const currentQuestion = questions[currentQuestionIndex];
+            questionText.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
+            optionsButtons.innerHTML = ''; // Clear previous options
+
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option-btn');
+                button.addEventListener('click', () => selectOption(button, option, currentQuestion.correct));
+                optionsButtons.appendChild(button);
+            });
+        }
+
+        function selectOption(selectedButton, selectedOption, correctAnswer) {
+            if (answeredCurrentQuestion) return; // Prevent multiple clicks
+
+            answeredCurrentQuestion = true;
+            const allOptions = optionsButtons.querySelectorAll('.option-btn');
+
+            allOptions.forEach(button => {
+                button.disabled = true; // Disable all buttons after selection
+                if (button.textContent === correctAnswer) {
+                    button.classList.add('correct');
+                } else {
+                    button.classList.add('incorrect');
+                }
+            });
+
+            if (selectedOption === correctAnswer) {
+                score++;
+            }
+
+            nextButton.style.display = 'block'; // Show next button
+        }
+
+        function showNextQuestion() {
+            currentQuestionIndex++;
+            nextButton.style.display = 'none'; // Hide next button for the new question
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            questionText.textContent = "Quiz Completed!";
+            optionsButtons.innerHTML = ''; // Clear options
+            nextButton.style.display = 'none';
+            scoreDisplay.textContent = `You scored ${score} out of ${questions.length} questions correctly!`;
+            scoreDisplay.style.display = 'block';
+            restartButton.style.display = 'block';
+        }
+
+        nextButton.addEventListener('click', showNextQuestion);
+        restartButton.addEventListener('click', startQuiz);
+
+        // Initialize the quiz when the page loads
+        startQuiz();
+    </script>
+</body>
+</html>
